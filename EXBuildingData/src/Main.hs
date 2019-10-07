@@ -37,6 +37,8 @@ mkVector x y = V2 x y
 
 -- joo ei ymmärrä, KYSY
 -- combine :: Vector2 Int -> Maybe (Vector2 Int) -> OneOrTwo Int Bool
+-- combine jotainöojlik
+--combine (V2 x) (Maybe (V2 y)) = 
 
 -- combine3 :: Vector2 Int -> Maybe Bool -> Maybe String 
 --              -> OneOrTwo Int (OneOrTwo Bool String)
