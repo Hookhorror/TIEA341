@@ -47,10 +47,11 @@ g1 x y = case x of
 -- g2 x y = case y of
 --         Nothing -> x
 --         z -> Just (x,y)
-g3 :: a -> b -> (Either a b)
-g3 x y = case x of
-          Left x -> x
-          Right y -> y
+
+-- g3 :: a -> b -> (Either a b)
+-- g3 x y = case x of
+--           Left x -> x
+--           Right y -> y
 
 
 
