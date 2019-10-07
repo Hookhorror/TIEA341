@@ -21,28 +21,14 @@ mkVector :: Int -> Int -> Vector2
 mkVector n m = V2 (n * m)
 
 
-data OneOrTwo = YksiVaiKaksi Int Bool deriving(Show)
-
 --combine :: Vector2 Int -> Maybe (Vector2 Int) -> OneOrTwo Int Bool
---combine n maybe (m) = case Maybe m of
---                      Nothing -> YksiVaiKaksi 1 True
---                      Just m  -> YksiVaiKaksi 2 True
 
 --combine3 :: Vector2 Int -> Maybe Bool -> Maybe String 
---             -> OneOrTwo Int (OneOrTwo Bool String)
 
+-- submitDay :: Submission -> Int
 
-newtype SubmitDay = SubD Submission deriving(Eq,Ord,Show)
-newtype Submission = Sub Int deriving(Eq,Ord,Show)
+-- getOther :: OneOrTwo a b -> Maybe b
 
-submitDay :: Submission -> Int
-submitDay (Sub x) = x
-
--- Tämä on tällä hetkellä vaiheessa
-getOther :: OneOrTwo a b -> Maybe b
-getOther OneOrTwo a b = case b of
-                        Just b -> Just b
-                        Nothing -> a
 
 main :: IO ()
 main = do
