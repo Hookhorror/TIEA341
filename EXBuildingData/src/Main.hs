@@ -46,11 +46,14 @@ third (a,b,c) = c
 first (a,b,c) = a
 
 submitDay :: Submission -> Int
+-- testidataa
 joni = S "Joni" "jeejee" (10,10,10)
 submitDay (S x y z) = first z
 
--- getOther :: OneOrTwo a b -> Maybe b
-
+getOther :: OneOrTwo a b -> Maybe b
+getOther (These a b) = Just b
+getOther (That b) = Just b
+getOther (This a) = Nothing
 
 main :: IO ()
 main = do
