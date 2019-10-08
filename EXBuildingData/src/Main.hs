@@ -36,10 +36,10 @@ mkVector x y = V2 x y
 -- These x b (missä x on mikä tahansa Int ja b mikä tahansa Bool)
 
 -- joo ei ymmärrä, KYSY
--- combine :: Vector2 Int -> Maybe (Vector2 Int) -> OneOrTwo Int Bool
--- combine jotainöojlik
---combine (V2 x) (Maybe (V2 y)) = 
-
+combine :: Vector2 Int -> Maybe (Vector2 Int) -> OneOrTwo Int Bool
+combine (V2 x1 y1) z = case z of
+  Nothing -> These (x1 + y1) False
+  Just (V2 x2 y2) -> These (x1 + y1 + x2 + y2) True
 -- combine3 :: Vector2 Int -> Maybe Bool -> Maybe String 
 --              -> OneOrTwo Int (OneOrTwo Bool String)
 
