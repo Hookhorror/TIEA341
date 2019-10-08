@@ -40,8 +40,16 @@ combine :: Vector2 Int -> Maybe (Vector2 Int) -> OneOrTwo Int Bool
 combine (V2 x1 y1) z = case z of
   Nothing -> These (x1 + y1) False
   Just (V2 x2 y2) -> These (x1 + y1 + x2 + y2) True
--- combine3 :: Vector2 Int -> Maybe Bool -> Maybe String 
---              -> OneOrTwo Int (OneOrTwo Bool String)
+
+combine3 :: Vector2 Int -> Maybe Bool -> Maybe String 
+             -> OneOrTwo Int (OneOrTwo Bool String)
+combine3 (V2 x1 x2) y z = case y of
+  Just yy -> case z of
+    Just zz -> These (x1+x2) (These yy zz)
+    Nothing -> These (x1+x2) (This yy) 
+  Nothing -> case z of
+    Just zz -> These (x1+x2) (That zz)
+    Nothing -> This (x1+x2)
 
 third :: (a,b,c) -> c
 third (a,b,c) = c
