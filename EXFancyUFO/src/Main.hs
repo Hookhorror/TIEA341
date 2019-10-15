@@ -41,25 +41,25 @@ simulateWorld :: Float -> (AsteroidWorld -> AsteroidWorld)
 simulateWorld _        GameOver          = GameOver  
 
 simulateWorld timeStep (Play rocks (Ship shipPos shipV) bullets (Ufo ufoPos ufoV))
-  | any (collidesWith shipPos) rocks = GameOver
+  | any (collidesWithRock shipPos) rocks = GameOver
   | otherwise = Play (concatMap updateRock rocks) 
                               (Ship newShipPos shipV)
                               (concat (map updateBullet bullets))
                               (Ufo updateUfo ufoV)
   where
-      collidesWith :: PointInSpace -> Rock -> Bool
-      collidesWith p (Rock rp s _) 
+      collidesWithRock :: PointInSpace -> Rock -> Bool
+      collidesWithRock p (Rock rp s _) 
        = magV (rp .- p) < s 
 
-      collidesWithBullet :: Rock -> Bool
-      collidesWithBullet r 
-       = any (\(Bullet bp _ _) -> collidesWith bp r) bullets 
+      rockCollidesWithBullet :: Rock -> Bool
+      rockCollidesWithBullet r 
+       = any (\(Bullet bp _ _) -> collidesWithRock bp r) bullets 
      
       updateRock :: Rock -> [Rock]
       updateRock r@(Rock p s v) 
-       | collidesWithBullet r && s < 7 
+       | rockCollidesWithBullet r && s < 7 
             = []
-       | collidesWithBullet r && s > 7 
+       | rockCollidesWithBullet r && s > 7 
             = splitRock r
        | otherwise                     
             = [Rock (restoreToScreen (p .+ timeStep .* v)) s v]
@@ -68,7 +68,7 @@ simulateWorld timeStep (Play rocks (Ship shipPos shipV) bullets (Ufo ufoPos ufoV
       updateBullet (Bullet p v a) 
         | a > 5                      
              = []
-        | any (collidesWith p) rocks 
+        | any (collidesWithRock p) rocks 
              = [] 
         | otherwise                  
              = [Bullet (restoreToScreen (p .+ timeStep .* v)) v 
