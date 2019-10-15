@@ -11,6 +11,7 @@ data AsteroidWorld = Play [Rock] Ship [Bullet] Ufo --ufo lisätty
 type Velocity     = (Float, Float)
 type Size         = Float
 type Age          = Float
+type Health       = Integer
 
 -- lisätty
 data Ufo    = Ufo    PointInSpace Velocity
