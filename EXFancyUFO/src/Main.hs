@@ -14,7 +14,7 @@ type Age          = Float
 type Health       = Integer
 
 -- lisätty
-data Ufo    = Ufo    PointInSpace Velocity
+data Ufo    = Ufo    PointInSpace Velocity Health
     deriving (Eq,Show)
 data Ship   = Ship   PointInSpace Velocity      
     deriving (Eq,Show)
@@ -33,23 +33,27 @@ initialWorld = Play
                    ] -- The default rocks
                    (Ship (0,0) (0,5)) -- The initial ship
                    [] -- The initial bullets (none)
-                   (Ufo (0,200) (10,0)) -- alun ufo
+                   (Ufo (0,200) (10,0)) 2 -- alun ufo
 
 
 simulateWorld :: Float -> (AsteroidWorld -> AsteroidWorld)
 
 simulateWorld _        GameOver          = GameOver  
 
-simulateWorld timeStep (Play rocks (Ship shipPos shipV) bullets (Ufo ufoPos ufoV))
+simulateWorld timeStep (Play rocks (Ship shipPos shipV) bullets (Ufo ufoPos ufoV ufoH))
   | any (collidesWithRock shipPos) rocks = GameOver
   | otherwise = Play (concatMap updateRock rocks) 
                               (Ship newShipPos shipV)
                               (concat (map updateBullet bullets))
-                              (Ufo updateUfo ufoV)
+                              (Ufo updateUfo ufoV ufoH)
   where
       collidesWithRock :: PointInSpace -> Rock -> Bool
       collidesWithRock p (Rock rp s _) 
        = magV (rp .- p) < s 
+
+      collidesWithUfo :: PointInSpace -> Ufo -> Bool
+      collidesWithUfo p (Ufo rp s _) 
+       = magV (rp .- p) < s
 
       rockCollidesWithBullet :: Rock -> Bool
       rockCollidesWithBullet r 
@@ -63,7 +67,20 @@ simulateWorld timeStep (Play rocks (Ship shipPos shipV) bullets (Ufo ufoPos ufoV
             = splitRock r
        | otherwise                     
             = [Rock (restoreToScreen (p .+ timeStep .* v)) s v]
- 
+-- muutoksia
+      ufoCollidesWithBullet :: Rock -> Bool
+      ufoCollidesWithBullet r 
+       = any (\(Bullet bp _ _) -> collidesWithUfo bp r) bullets 
+     
+      updateUfo :: PointInSpace
+      updateUfo r@(Ufo p s v) 
+       | ufoCollidesWithBullet r && s < 7 
+            = []
+       | ufoCollidesWithBullet r && s > 7 
+            = damageUfo r -- lisää funktio
+       | otherwise                     
+            = [Ufo (restoreToScreen (p .+ timeStep .* v)) s v]
+ -- muutoksia
       updateBullet :: Bullet -> [Bullet] 
       updateBullet (Bullet p v a) 
         | a > 5                      
@@ -77,12 +94,15 @@ simulateWorld timeStep (Play rocks (Ship shipPos shipV) bullets (Ufo ufoPos ufoV
       newShipPos :: PointInSpace
       newShipPos = restoreToScreen (shipPos .+ timeStep .* shipV)
 
-      updateUfo :: PointInSpace
-      updateUfo = restoreToScreen (ufoPos .+ timeStep .* ufoV)
+    --   updateUfo :: PointInSpace
+    --   updateUfo = restoreToScreen (ufoPos .+ timeStep .* ufoV)
 
 splitRock :: Rock -> [Rock]
 splitRock (Rock p s v) = [Rock p (s/2) (3 .* rotateV (pi/3)  v)
                          ,Rock p (s/2) (3 .* rotateV (-pi/3) v) ]
+
+damageUfo :: Ufo -> Ufo
+damageUfo (Health ufo) - 1
 
 restoreToScreen :: PointInSpace -> PointInSpace
 restoreToScreen (x,y) = (cycleCoordinates x, cycleCoordinates y)
