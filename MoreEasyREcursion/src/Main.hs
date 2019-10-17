@@ -1,10 +1,11 @@
 module Main where
 
-  -- delete :: Int -> [Int] -> [Int]
-  -- delete x [] = []
-  -- -- delete 0 [x] = [x]
-  -- -- delete 1 (x:xs) = xs
-  -- delete y (x:xs) = if (y == x) then xs else delete y (x:xs)
+  delete :: Int -> [Int] -> [Int]
+  delete n [] = []
+  delete n (x:xs)
+      | n == x = xs
+      | otherwise = x : delete n xs
+
   
   takeEvens :: [Int] -> [Int]
   takeEvens [] = []
